@@ -38,6 +38,12 @@ Mask secret values when displaying output:
 envdiff diff .env.staging .env.production --mask-secrets
 ```
 
+Export the synced result to a new file:
+
+```bash
+envdiff sync .env.development .env.production --export .env.production.new
+```
+
 ### Example Output
 
 ```
@@ -50,11 +56,12 @@ envdiff diff .env.staging .env.production --mask-secrets
 
 ## Flags
 
-| Flag             | Description                          |
-|------------------|--------------------------------------|
-| `--mask-secrets` | Redact sensitive values in output    |
-| `--only-missing` | Show only keys missing from target   |
-| `--export`       | Write synced output to a file        |
+| Flag             | Description                                      |
+|------------------|--------------------------------------------------|
+| `--mask-secrets` | Redact sensitive values in output                |
+| `--only-missing` | Show only keys missing from target               |
+| `--export`       | Write synced output to a specified file          |
+| `--no-color`     | Disable colored output (useful for CI pipelines) |
 
 ---
 
