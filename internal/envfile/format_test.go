@@ -66,6 +66,10 @@ func TestFormatDiff_Dotenv(t *testing.T) {
 	if !strings.Contains(out, "APP_NAME=myapp") {
 		t.Errorf("unchanged key missing from dotenv output, got:\n%s", out)
 	}
+	// Changed keys should appear with their new value in dotenv output.
+	if !strings.Contains(out, "DB_HOST=prod-db") {
+		t.Errorf("changed key missing from dotenv output with new value, got:\n%s", out)
+	}
 }
 
 func TestFormatDiff_DefaultIsText(t *testing.T) {
@@ -76,5 +80,15 @@ func TestFormatDiff_DefaultIsText(t *testing.T) {
 	}
 	if sb.Len() == 0 {
 		t.Error("expected non-empty output for unknown format (should default to text)")
+	}
+}
+
+func TestFormatDiff_EmptyResults(t *testing.T) {
+	for _, format := range []OutputFormat{FormatText, FormatTable, FormatDotenv} {
+		var sb strings.Builder
+		err := FormatDiff(&sb, []DiffResult{}, format)
+		if err != nil {
+			t.Errorf("format %q: unexpected error on empty results: %v", format, err)
+		}
 	}
 }
