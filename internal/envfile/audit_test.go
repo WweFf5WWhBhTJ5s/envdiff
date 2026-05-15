@@ -29,9 +29,9 @@ func TestAudit_RecordsActions(t *testing.T) {
 	log := Audit(results, "test", nil)
 
 	expected := map[string]AuditAction{
-		"DB_HOST":  AuditChanged,
-		"NEW_KEY":  AuditAdded,
-		"OLD_KEY":  AuditRemoved,
+		"DB_HOST": AuditChanged,
+		"NEW_KEY": AuditAdded,
+		"OLD_KEY": AuditRemoved,
 	}
 
 	for _, e := range log.Entries {
@@ -76,5 +76,15 @@ func TestAudit_TimestampSet(t *testing.T) {
 		if e.Timestamp.IsZero() {
 			t.Errorf("entry for %s has zero timestamp", e.Key)
 		}
+	}
+}
+
+func TestAudit_EntryCount(t *testing.T) {
+	// Only changed, added, and removed entries should appear; unchanged is excluded.
+	results := makeAuditDiff()
+	log := Audit(results, "test", nil)
+	const wantCount = 4 // DB_HOST, NEW_KEY, OLD_KEY, DB_PASSWORD
+	if got := len(log.Entries); got != wantCount {
+		t.Errorf("expected %d audit entries, got %d", wantCount, got)
 	}
 }
