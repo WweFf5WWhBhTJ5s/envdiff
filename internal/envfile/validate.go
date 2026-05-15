@@ -85,6 +85,19 @@ func Validate(ef EnvFile, requiredKeys []string) ValidationResult {
 	return result
 }
 
+// FilterErrors returns only the ValidationErrors that match the given key.
+// This is useful when callers need to inspect errors for a specific key
+// without iterating over the full error list.
+func (r *ValidationResult) FilterErrors(key string) []ValidationError {
+	var matched []ValidationError
+	for _, e := range r.Errors {
+		if e.Key == key {
+			matched = append(matched, e)
+		}
+	}
+	return matched
+}
+
 func validateKeyName(key string) error {
 	for i, ch := range key {
 		if i == 0 && unicode.IsDigit(ch) {
